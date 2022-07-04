@@ -24,11 +24,11 @@ export class Track {
   @Prop()
   audio: string;
 
+  @Prop()
+  text: string;
+
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Comment' }]})
   comments: Comment[];
-
-  @Prop({ type: Types.ObjectId, ref: 'Track' })
-  track: Track;
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);
