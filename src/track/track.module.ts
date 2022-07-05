@@ -1,11 +1,11 @@
-import { Module } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
-import { TrackController } from "./track.controller";
-import { TrackService } from "./track.service";
-import { Track, TrackSchema } from "./schemas/track.shema";
-import { Comment, CommentSchema } from "./schemas/comment.schema";
-import { FileService } from "../file/file.service";
+import { TrackController } from './track.controller';
+import { TrackService } from './track.service';
+import { Track, TrackSchema } from './schemas/track.shema';
+import { Comment, CommentSchema } from './schemas/comment.schema';
+import { FileService } from '../file/file.service';
 
 @Module({
   imports: [
@@ -15,6 +15,4 @@ import { FileService } from "../file/file.service";
   controllers: [TrackController],
   providers: [TrackService, FileService],
 })
-export class TrackModule {
-
-}
+export class TrackModule {}

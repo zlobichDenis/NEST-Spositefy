@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Express } from "express";
-import * as path from "path";
-import * as fs from "fs";
-import * as uuid from "uuid";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Express } from 'express';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as uuid from 'uuid';
 
 export enum FileType {
   AUDIO = 'audio',
@@ -23,13 +23,10 @@ export class FileService {
       fs.writeFileSync(path.resolve(filePath, filename), file.buffer);
 
       return type + '/' + filename;
-    } catch(err) {
-      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    } catch (err) {
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  removeFile(filename: string){
-
-  }
-
+  removeFile(filename: string) {}
 }
