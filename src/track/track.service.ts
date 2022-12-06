@@ -10,73 +10,74 @@ import { FileService, FileType } from '../file/file.service';
 
 @Injectable()
 export class TrackService {
-  constructor(
-    @InjectModel(Track.name) private trackModel: Model<TrackDocument>,
-    @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
-    private fileService: FileService,
-  ) {}
+    constructor(
+        @InjectModel(Track.name) private trackModel: Model<TrackDocument>,
+        @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+        private fileService: FileService
+    ) {
+    }
 
-  async create(
-    dto: CreateTrackDto,
-    picture: Express.Multer.File,
-    audio: Express.Multer.File,
-  ): Promise<Track> {
-    const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
-    const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
+    async create(
+        dto: CreateTrackDto,
+        picture: Express.Multer.File,
+        audio: Express.Multer.File
+    ): Promise<Track> {
+        const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
+        const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
 
-    const track = await this.trackModel.create({
-      ...dto,
-      listens: 0,
-      picture: picturePath,
-      audio: audioPath,
-    });
+        const track = await this.trackModel.create({
+            ...dto,
+            listens: 0,
+            picture: picturePath,
+            audio: audioPath
+        });
 
-    return track;
-  }
+        return track;
+    }
 
-  async getAll(count = 10, offset = 0): Promise<Track[]> {
-    const tracks = await this.trackModel
-      .find()
-      .skip(Number(offset))
-      .limit(Number(count));
+    async getAll(count = 10, offset = 0): Promise<Track[]> {
+        const tracks = await this.trackModel
+            .find()
+            .skip(Number(offset))
+            .limit(Number(count));
 
-    return tracks;
-  }
+        return tracks;
+    }
 
-  async getOne(id: ObjectId): Promise<Track> {
-    const track = await this.trackModel.findById(id).populate('comments');
+    async getOne(id: ObjectId): Promise<Track> {
+        const track = await this.trackModel.findById(id).populate('comments');
 
-    return track;
-  }
+        return track;
+    }
 
-  async delete(id: ObjectId): Promise<ObjectId> {
-    const track = await this.trackModel.findByIdAndDelete(id);
+    async delete(id: ObjectId): Promise<ObjectId> {
+        const track = await this.trackModel.findByIdAndDelete(id);
 
-    return track._id;
-  }
+        return track._id;
+    }
 
-  async addComment(dto: CreateCommentDto): Promise<Comment> {
-    const track = await this.trackModel.findById(dto.trackId);
-    const comment = await this.commentModel.create({ ...dto });
+    async addComment(dto: CreateCommentDto): Promise<Comment> {
+        const track = await this.trackModel.findById(dto.trackId);
+        const comment = await this.commentModel.create({ ...dto });
 
-    track.comments.push(comment._id);
+        track.comments.push(comment._id);
 
-    await track.save();
+        await track.save();
 
-    return comment;
-  }
+        return comment;
+    }
 
-  async listen(id: ObjectId): Promise<void> {
-    const track = await this.trackModel.findById(id);
-    track.listens += 1;
-    track.save();
-  }
+    async listen(id: ObjectId): Promise<void> {
+        const track = await this.trackModel.findById(id);
+        track.listens += 1;
+        track.save();
+    }
 
-  async search(query: string): Promise<Track[]> {
-    const tracks = await this.trackModel.find({
-      name: { $regex: new RegExp(query, 'i') },
-    });
+    async search(query: string): Promise<Track[]> {
+        const tracks = await this.trackModel.find({
+            name: { $regex: new RegExp(query, 'i') }
+        });
 
-    return tracks;
-  }
+        return tracks;
+    }
 }
